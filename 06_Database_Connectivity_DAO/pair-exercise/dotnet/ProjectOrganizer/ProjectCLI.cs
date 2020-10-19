@@ -281,7 +281,7 @@ namespace ProjectOrganizer
             {
                 foreach (Project proj in projects)
                 {
-                    Console.WriteLine(proj.ProjectId.ToString().PadRight(5) + proj.Name.PadRight(20) + proj.StartDate.ToShortDateString().PadRight(10) + proj.EndDate.ToShortDateString().PadRight(10));
+                    Console.WriteLine(proj.ProjectId.ToString().PadRight(5) + proj.Name.PadRight(30) + proj.StartDate.ToShortDateString().PadRight(10) + proj.EndDate.ToShortDateString().PadRight(10));
                 }
                 
             }

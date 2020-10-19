@@ -19,7 +19,7 @@ namespace ProjectOrganizer.DAL
         private string sqlSearch = "SELECT * FROM employee WHERE employee.first_name = @first_name AND employee.last_name = @last_name;";
 
         // SQL command to get all employees without a project
-        private string sqlGetEmployeesWithoutProjects = "SELECT * FROM employee JOIN project_employee ON project_employee.employee_id = employee_id JOIN project ON project.project_id = project_employee.project_id WHERE project_employee.project_id IS NULL;";
+        private string sqlGetEmployeesWithoutProjects = "SELECT * FROM employee LEFT JOIN project_employee ON project_employee.employee_id = employee.employee_id LEFT JOIN project ON project.project_id = project_employee.project_id WHERE project_employee.project_id IS NULL;";
         
         // Single Parameter Constructor
         public EmployeeSqlDAO(string dbConnectionString)
@@ -139,11 +139,7 @@ namespace ProjectOrganizer.DAL
 
                 SqlCommand command = new SqlCommand(sqlGetEmployeesWithoutProjects, conn);
 
-                // We passed a string firstname and lastname to the method
-                // We can call the parameters that we need from the passed strings
-                // (<name of our variable>, <the value>)
-                command.Parameters.AddWithValue("@first_name", firstname);
-                command.Parameters.AddWithValue("@last_name", lastname);
+
 
 
                 // Create a reader

@@ -13,7 +13,15 @@ namespace ProjectOrganizer.DAL
     {
         private string connectionString;
 
+        // SQL command to get all departments
         private string sqlGetDepartment = "SELECT * FROM department;";
+
+        // SQL command to add a new department
+        private string sqlCreateDepartment = "SET IDENTITY_INSERT department ON; INSERT INTO department(department_id, name) VALUES (@department_id, @name); SET IDENTITY_INSERT department OFF;";
+
+        // SQL command to update a department
+        private string sqlUpdateDepartment = "UPDATE department SET name = @name WHERE department.department_id = @department_id;";
+
 
         // Single Parameter Constructor
         public DepartmentSqlDAO(string dbConnectionString)
@@ -63,7 +71,26 @@ namespace ProjectOrganizer.DAL
         /// <returns>The id of the new department (if successful).</returns>
         public int CreateDepartment(Department newDepartment)
         {
-            throw new NotImplementedException();
+            int count = 0;
+
+            // Create the SQL connection
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+
+                // Open the SQL connection
+                conn.Open();
+
+                SqlCommand command = new SqlCommand(sqlCreateDepartment, conn);
+
+                // We passed a Department object to the method
+                // We can call the parameters that we need from the object
+                command.Parameters.AddWithValue("@name", newDepartment.Name);
+                command.Parameters.AddWithValue("@department_id", newDepartment.Id);
+
+                count = command.ExecuteNonQuery();
+            }
+
+            return count;
         }
         
         /// <summary>
@@ -73,7 +100,33 @@ namespace ProjectOrganizer.DAL
         /// <returns>True, if successful.</returns>
         public bool UpdateDepartment(Department updatedDepartment)
         {
-            throw new NotImplementedException();
+            int count = 0;
+            bool isSuccessful = false;
+
+            // Create the SQL connection
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+
+                // Open the SQL connection
+                conn.Open();
+
+                SqlCommand command = new SqlCommand(sqlUpdateDepartment, conn);
+
+                // We passed a Department object to the method
+                // We can call the parameters that we need from the object
+                command.Parameters.AddWithValue("@name", updatedDepartment.Name);
+                command.Parameters.AddWithValue("@department_id", updatedDepartment.Id);
+
+                count = command.ExecuteNonQuery();
+
+                // If the count affects more than 0 lines...
+                if (count > 0)
+                {
+                    isSuccessful = true;
+                }
+            }
+
+            return isSuccessful;
         }
 
     }
