@@ -101,6 +101,7 @@ namespace Capstone
                 }
                 else
                 {
+                    // Create a new Venue with the information it needs to display to the User
                     // Needs a check to see if the selected venue is a valid option
                     Venue VenueDetails = venueDAO.ListVenue(int.Parse(ListVenuesMenuUserInput));
 
@@ -110,6 +111,9 @@ namespace Capstone
                     Console.WriteLine();
                     Console.WriteLine(VenueDetails.description);
                     Console.WriteLine();
+
+                    // Move to the Venue Details Menu
+                    RunVenueDetailsMenu();
                 }
 
             }

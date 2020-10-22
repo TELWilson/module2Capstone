@@ -74,6 +74,8 @@ namespace Capstone.DAL
                     venue.location = Convert.ToString(reader["cityName"]);
                     venue.location += ", ";
                     venue.location = Convert.ToString(reader["state_abbreviation"]);
+                    // Some Venues have multiple categories
+                    // TODO figure out a way to add all of the category names
                     venue.categoryName = Convert.ToString(reader["categoryName"]);
                 }
             }
