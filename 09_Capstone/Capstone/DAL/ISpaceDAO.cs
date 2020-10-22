@@ -5,10 +5,9 @@ using System.Text;
 
 namespace Capstone.DAL
 {
-    public interface IVenueDAO
+    public interface ISpaceDAO
     {
-        IList<Venue> GetVenues();
+        IList<Space> GetSpaces(int ListVenuesMenuUserInput);
 
-        Venue ListVenue(int ListVenuesMenuUserInput);
     }
 }

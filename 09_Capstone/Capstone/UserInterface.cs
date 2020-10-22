@@ -14,11 +14,13 @@ namespace Capstone
         private string connectionString;
 
         private IVenueDAO venueDAO;
+        private ISpaceDAO spaceDAO;
 
-        public UserInterface(string connectionString, IVenueDAO venueDAO)
+        public UserInterface(string connectionString, IVenueDAO venueDAO, ISpaceDAO spaceDAO)
         {
             this.connectionString = connectionString;
             this.venueDAO = venueDAO;
+            this.spaceDAO = spaceDAO;
         }
 
         public void Run()
@@ -82,8 +84,11 @@ namespace Capstone
             return venues;
         }
 
+        // Pulls out the Venue Details
         public void RunListVenuesMenu()
         {
+            Venue VenueDetails = new Venue();
+
             bool stayInListVenuesMenu = true;
 
             while (stayInListVenuesMenu)
@@ -103,7 +108,7 @@ namespace Capstone
                 {
                     // Create a new Venue with the information it needs to display to the User
                     // Needs a check to see if the selected venue is a valid option
-                    Venue VenueDetails = venueDAO.ListVenue(int.Parse(ListVenuesMenuUserInput));
+                    VenueDetails = venueDAO.ListVenue(int.Parse(ListVenuesMenuUserInput));
 
                     Console.WriteLine(VenueDetails.name);
                     Console.WriteLine($"Location: {VenueDetails.location}");
@@ -113,7 +118,7 @@ namespace Capstone
                     Console.WriteLine();
 
                     // Move to the Venue Details Menu
-                    RunVenueDetailsMenu();
+                    RunVenueDetailsMenu(ListVenuesMenuUserInput, VenueDetails);
                 }
 
             }
@@ -129,8 +134,10 @@ namespace Capstone
             Console.WriteLine("R) Return to Main Menu");
         }
 
-        public void RunVenueDetailsMenu()
+        public void RunVenueDetailsMenu(string ListVenuesMenuUserInput, Venue venueDetails)
         {
+            int venueNumber = int.Parse(ListVenuesMenuUserInput);
+
             bool stayInVenueDetailsMenu = true;
 
             while (stayInVenueDetailsMenu)
@@ -142,10 +149,14 @@ namespace Capstone
                 switch (VenueDetailsMenuUserInput)
                 {
                     case "1":
-                        RunViewSpacesMenu();
+                        Console.WriteLine(venueDetails.name + " Spaces");
+                        Console.WriteLine();
+                        Console.WriteLine("".PadRight(3) + "Name".PadRight(20) + "Open".PadRight(20) + "Close".PadRight(20) + "Daily Rate".PadRight(20) + "Max Occupancy".PadRight(20));
+                        GetAllSpaces(venueNumber);
+                        RunViewSpacesMenu(venueNumber);
                         break;
-                    case "2":
-                        break;
+                    //case "2":
+                        //break;
                     case "r":
                         stayInVenueDetailsMenu = false;
                         break;
@@ -163,13 +174,33 @@ namespace Capstone
             Console.WriteLine("R) Return to Venues");
         }
 
-        public void RunViewSpacesMenu()
+        private IList<Space> GetAllSpaces(int venueNumber)
+        {
+            IList<Space> spaces = spaceDAO.GetSpaces(venueNumber);
+
+            if (spaces.Count > 0)
+            {
+                foreach (Space space in spaces)
+                {
+                    //TODO: ADD THE REST OF THE INFO!
+                    Console.WriteLine(space.id.ToString() + ") " + space.name.PadRight(20) + space.open_from.ToString().PadRight(20) + space.open_to.ToString().PadRight(20) + space.daily_rate.ToString().PadRight(20) + space.max_occupancy.ToString().PadRight(20));
+                }
+            }
+            else
+            {
+                Console.WriteLine("**** NO RESULTS ****");
+            }
+
+            return spaces;
+        }
+
+        public void RunViewSpacesMenu(int venueNumber)
         {
             bool stayInViewSpacesMenu = true;
 
             while (stayInViewSpacesMenu)
             {
-                DisplayViewSpacesMenu();
+                DisplayViewSpacesMenu(venueNumber);
 
                 string ViewSpacesMenuUserInput = Console.ReadLine();
 
@@ -186,9 +217,9 @@ namespace Capstone
             }
         }
 
-        public void DisplayViewSpacesMenu()
+        public void DisplayViewSpacesMenu(int venueNumber)
         {
-            //TODO: SQL that prints out each id, name, open, close, daily rate, max occupancy
+            spaceDAO.GetSpaces(venueNumber);//TODO: SQL that prints out each id, name, open, close, daily rate, max occupancy
             Console.WriteLine("What would you like to do next?");
             Console.WriteLine("1) Reserve a Space");
             Console.WriteLine("R) Return to Venue Details");
