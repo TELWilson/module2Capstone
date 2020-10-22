@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Capstone.DAL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 
@@ -19,7 +20,9 @@ namespace Capstone
 
             string connectionString = configuration.GetConnectionString("Project");
 
-            UserInterface ui = new UserInterface(connectionString);
+            IVenueDAO venueDAO = new VenueDAO(connectionString);
+
+            UserInterface ui = new UserInterface(connectionString, venueDAO);
             ui.Run();
 
         }
