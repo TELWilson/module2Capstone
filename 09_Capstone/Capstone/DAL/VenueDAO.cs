@@ -14,10 +14,10 @@ namespace Capstone.DAL
         private string sqlGetVenue = "SELECT * FROM venue;";
 
         // SQL Command to get specific Venue Details       WHERE department.department_id = @department_id;";
-        private string sqlListVenue = "SELECT v.name, v.description, ci.name, ci.state_abbreviation, ca.name " +
-                                        "FROM venue AS v JOIN city AS ci ON ci.id = v.city_id JOIN category_venue AS cv ON v.id = cv.venue_id " +
-                                        "JOIN category AS ca ON ca.id = cv.category_id" +
-                                        "WHERE venue.id = @venue_id;";
+        private string sqlListVenue = "SELECT v.name, v.description, ci.name AS cityName, ci.state_abbreviation, ca.name AS categoryName " +
+                                      "FROM venue AS v JOIN city AS ci ON ci.id = v.city_id JOIN category_venue AS cv ON v.id = cv.venue_id " +
+                                      "JOIN category AS ca ON ca.id = cv.category_id " +
+                                      "WHERE v.id = @venue_id;";
 
 
         // Constructor with connectionString
@@ -71,8 +71,10 @@ namespace Capstone.DAL
                 {
                     venue.name = Convert.ToString(reader["name"]);
                     venue.description = Convert.ToString(reader["description"]);
-                    //venue.location = Convert.ToString(reader["city.name" + ", " + "city.state_abbreviation"]);
-                    venue.categoryName = Convert.ToString(reader["category.name"]);
+                    venue.location = Convert.ToString(reader["cityName"]);
+                    venue.location += ", ";
+                    venue.location = Convert.ToString(reader["state_abbreviation"]);
+                    venue.categoryName = Convert.ToString(reader["categoryName"]);
                 }
             }
             return venue;

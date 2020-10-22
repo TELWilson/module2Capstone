@@ -93,10 +93,25 @@ namespace Capstone
                 // Take in the User's Input
                 string ListVenuesMenuUserInput = Console.ReadLine();
 
-                // SQL Statement that returns details about the selected venue
-                // Needs a check to see if the selected venue is an option
-                Venue VenueDetails = venueDAO.ListVenue(int.Parse(ListVenuesMenuUserInput));
-                Console.WriteLine(VenueDetails);
+                // If the user types in "r" or "R"
+                if (ListVenuesMenuUserInput.ToLower().Equals("r"))
+                {
+                    stayInListVenuesMenu = false;
+                    break;
+                }
+                else
+                {
+                    // Needs a check to see if the selected venue is a valid option
+                    Venue VenueDetails = venueDAO.ListVenue(int.Parse(ListVenuesMenuUserInput));
+
+                    Console.WriteLine(VenueDetails.name);
+                    Console.WriteLine($"Location: {VenueDetails.location}");
+                    Console.WriteLine($"Categories: {VenueDetails.categoryName}");
+                    Console.WriteLine();
+                    Console.WriteLine(VenueDetails.description);
+                    Console.WriteLine();
+                }
+
             }
         }
 
