@@ -20,7 +20,9 @@ namespace Capstone
 
             string connectionString = configuration.GetConnectionString("Project");
 
+            // Create a new object of type VenueDAO so that we can pass it into the User Interface.
             IVenueDAO venueDAO = new VenueDAO(connectionString);
+            // Create a new object of type SpaceDAO so that we can padd it into the User Interface.
             ISpaceDAO spaceDAO = new SpaceDAO(connectionString);
 
             UserInterface ui = new UserInterface(connectionString, venueDAO, spaceDAO);

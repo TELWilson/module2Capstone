@@ -11,8 +11,8 @@ namespace Capstone.DAL
     {
         private string connectionString;
 
+        // SQL Command that selects all columns from the matching venue id
         private string sqlGetSpaces = "SELECT * FROM space WHERE @ListVenuesMenuUserInput = space.venue_id ";
-
 
         // Constructor with connectionString
         public SpaceDAO(string connectionString)
@@ -20,10 +20,11 @@ namespace Capstone.DAL
             this.connectionString = connectionString;
         }
 
-
-
-
-
+        /// <summary>
+        /// Gets all of the available spaces for the currently selected venue
+        /// </summary>
+        /// <param name="ListVenuesMenuUserInput">The selected venue id</param>
+        /// <returns>An iList of all the spaces in the venue</returns>
         public IList<Space> GetSpaces(int ListVenuesMenuUserInput)
         {
             IList<Space> spaces = new List<Space>();
