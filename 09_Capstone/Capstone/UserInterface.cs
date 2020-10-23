@@ -25,8 +25,6 @@ namespace Capstone
 
         public void Run()
         {
-            // Test Purposes
-            Console.WriteLine("Reached the User Interface.");
             RunMainMenu();
         }
 
@@ -60,6 +58,7 @@ namespace Capstone
 
         public void DisplayMainMenu()
         {
+            Console.WriteLine();
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1) List Venues");
             Console.WriteLine("Q) Quit");
@@ -84,7 +83,6 @@ namespace Capstone
             return venues;
         }
 
-        // Pulls out the Venue Details
         public void RunListVenuesMenu()
         {
             Venue VenueDetails = new Venue();
@@ -110,6 +108,7 @@ namespace Capstone
                     // Needs a check to see if the selected venue is a valid option
                     VenueDetails = venueDAO.ListVenue(int.Parse(ListVenuesMenuUserInput));
 
+                    Console.WriteLine();
                     Console.WriteLine(VenueDetails.name);
                     Console.WriteLine($"Location: {VenueDetails.location}");
                     Console.WriteLine($"Categories: {VenueDetails.categoryName}");
@@ -126,6 +125,7 @@ namespace Capstone
 
         public void DisplayListVenuesMenu()
         {
+            Console.WriteLine();
             Console.WriteLine("Which Venue would you like to view?");
 
             // Prints out all Venues in the Database (And holds the list for testing)
@@ -149,10 +149,13 @@ namespace Capstone
                 switch (VenueDetailsMenuUserInput)
                 {
                     case "1":
+                        Console.WriteLine();
                         Console.WriteLine(venueDetails.name + " Spaces");
                         Console.WriteLine();
-                        Console.WriteLine("".PadRight(3) + "Name".PadRight(20) + "Open".PadRight(20) + "Close".PadRight(20) + "Daily Rate".PadRight(20) + "Max Occupancy".PadRight(20));
+                        Console.WriteLine("".PadRight(5) + "Name".PadRight(30) + "Open".PadRight(10) + "Close".PadRight(10) + "Daily Rate".PadRight(20) + "Max. Occupancy".PadRight(20));
                         GetAllSpaces(venueNumber);
+                        Console.WriteLine();
+
                         RunViewSpacesMenu(venueNumber);
                         break;
                     //case "2":
@@ -183,7 +186,7 @@ namespace Capstone
                 foreach (Space space in spaces)
                 {
                     //TODO: ADD THE REST OF THE INFO!
-                    Console.WriteLine(space.id.ToString() + ") " + space.name.PadRight(20) + space.open_from.ToString().PadRight(20) + space.open_to.ToString().PadRight(20) + space.daily_rate.ToString().PadRight(20) + space.max_occupancy.ToString().PadRight(20));
+                    Console.WriteLine("#" + space.id.ToString().PadRight(4) + space.name.PadRight(30) + space.open_from_string.ToString().PadRight(10) + space.open_to_string.ToString().PadRight(10) + space.daily_rate.ToString("C").PadRight(20) + space.max_occupancy.ToString().PadRight(20));
                 }
             }
             else

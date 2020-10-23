@@ -14,9 +14,9 @@ namespace Capstone.Models
 
         public bool is_accessible { get; set; }
 
-        public int open_from { get; set; }
+        public string open_from_string { get; set; }
 
-        public int open_to { get; set; }
+        public string open_to_string { get; set; }
 
         public decimal daily_rate { get; set; }
 

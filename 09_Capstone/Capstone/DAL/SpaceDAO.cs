@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Text;
 
 namespace Capstone.DAL
@@ -45,15 +46,8 @@ namespace Capstone.DAL
                     space.name = Convert.ToString(reader["name"]);
                     //space.venue_id = Convert.ToInt32(reader["venue_id"]);
                     //space.is_accessible = Convert.ToBoolean(reader["is_accessible"]);
-                    if (space.open_from != 0)
-                    {
-                        space.open_from = Convert.ToInt32(reader["open_from"]);
-                    }
-                    if (space.open_to != 0)
-                    {
-
-                        space.open_to = Convert.ToInt32(reader["open_to"]);
-                    }
+                    space.open_from_string = NumToMonth(Convert.ToString(reader["open_from"]));
+                    space.open_to_string = NumToMonth(Convert.ToString(reader["open_to"]));
                     space.daily_rate = Convert.ToDecimal(reader["daily_rate"]);
                     space.max_occupancy = Convert.ToInt32(reader["max_occupancy"]);
 
@@ -61,6 +55,59 @@ namespace Capstone.DAL
                 }
             }
             return spaces;
+        }
+
+        /// <summary>
+        /// Converts the number given into the corresponding Month in
+        /// three letter format
+        /// </summary>
+        /// <param name="numMonth">Number of the month to convert</param>
+        /// <returns>The converted month</returns>
+        public string NumToMonth(string numMonth)
+        {
+            switch (numMonth)
+            {
+                case "1":
+                    numMonth = "Jan";
+                    break;
+                case "2":
+                    numMonth = "Feb";
+                    break;
+                case "3":
+                    numMonth = "Mar";
+                    break;
+                case "4":
+                    numMonth = "Apr";
+                    break;
+                case "5":
+                    numMonth = "May";
+                    break;
+                case "6":
+                    numMonth = "Jun";
+                    break;
+                case "7":
+                    numMonth = "Jul";
+                    break;
+                case "8":
+                    numMonth = "Aug";
+                    break;
+                case "9":
+                    numMonth = "Sep";
+                    break;
+                case "10":
+                    numMonth = "Oct";
+                    break;
+                case "11":
+                    numMonth = "Nov";
+                    break;
+                case "12":
+                    numMonth = "Dec";
+                    break;
+                default:
+                    break;
+            }
+
+            return numMonth;
         }
     }
 }
