@@ -18,13 +18,15 @@ namespace Capstone
         // The UserInterface constructor creates these objects
         private IVenueDAO venueDAO;
         private ISpaceDAO spaceDAO;
+        private IReserveDAO reserveDAO;
 
         // Constructor for any and all objects of type UserInterface
-        public UserInterface(string connectionString, IVenueDAO venueDAO, ISpaceDAO spaceDAO)
+        public UserInterface(string connectionString, IVenueDAO venueDAO, ISpaceDAO spaceDAO, IReserveDAO reserveDAO)
         {
             this.connectionString = connectionString;
             this.venueDAO = venueDAO;
             this.spaceDAO = spaceDAO;
+            this.reserveDAO = reserveDAO;
         }
 
         /// <summary>
@@ -263,7 +265,8 @@ namespace Capstone
                 switch (ViewSpacesMenuUserInput)
                 {
                     case "1":
-                        RunReserveASpaceMenu();
+                        //IList<Reservation> listOfReservations = reserveDAO.GetReservations();
+                        RunReserveASpaceMenu(venueNumber);
                         break;
                     case "r":
                         stayInViewSpacesMenu = false;
@@ -288,19 +291,30 @@ namespace Capstone
         /// <summary>
         /// The final menu that can be viewed by the user in order to reserve a space.
         /// </summary>
-        public void RunReserveASpaceMenu()
+        public void RunReserveASpaceMenu(int venueNumber)
         {
             Console.Write("When do you need the space?: ");
+            // Make sure it is in the correct format 01-29-2020
             string userStartDate = Console.ReadLine();
+            DateTime dTUserStartDate = DateTime.Parse(userStartDate);
 
             Console.Write("How many days will you need the space?: ");
             string userDaysWanted = Console.ReadLine();
+            int intUserDaysWanted = int.Parse(userDaysWanted);
 
             Console.Write("How many people will be in attendance?: ");
             string userAttendees = Console.ReadLine();
+            int intUserAttendees = int.Parse(userAttendees);
 
             Console.WriteLine("The following spaces are available based on your needs: ");
             // SQL statement that displays space#, name, daily rate, max occupancy, accessible, total cost
+            IList<Reservation> availableSpaces = reserveDAO.CheckAvailability(venueNumber, intUserAttendees, dTUserStartDate, intUserDaysWanted);
+            //Make this a method
+            Console.WriteLine("Space #".PadRight(10) + "Name".PadRight(30) + "Daily Rate".PadRight(10) + "Max. Occup.".PadRight(10) + "Accessibile?".PadRight(20) + "Total Cost".PadRight(20));
+            foreach (Reservation reservation in availableSpaces)
+            {
+                Console.WriteLine("#" + reservation.reservation_id.ToString().PadRight(9) + reservation.name.PadRight(30) + reservation.daily_rate.ToString("C").PadRight(10) + reservation.max_occup.ToString().PadRight(10) + reservation.is_accessible.ToString().PadRight(20) + reservation.total_cost.ToString("C").PadRight(20));
+            }
 
             Console.Write("Which space would you like to reserve (Enter 0 to cancel)?: ");
             string userReservationChoice = Console.ReadLine();
@@ -309,6 +323,7 @@ namespace Capstone
             string userName = Console.ReadLine();
 
             Console.WriteLine("Thanks for submitting your reservation! The details for your event are listed below: ");
+            // SQL statement to insert the reservation
         }
     }
 }

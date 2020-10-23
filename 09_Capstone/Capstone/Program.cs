@@ -22,10 +22,12 @@ namespace Capstone
 
             // Create a new object of type VenueDAO so that we can pass it into the User Interface.
             IVenueDAO venueDAO = new VenueDAO(connectionString);
-            // Create a new object of type SpaceDAO so that we can padd it into the User Interface.
+            // Create a new object of type SpaceDAO so that we can pass it into the User Interface.
             ISpaceDAO spaceDAO = new SpaceDAO(connectionString);
+            // Create a new object of type ReservationDAO so that we can pass it into the User Interface.
+            IReserveDAO reserveDAO = new ReservationDAO(connectionString);
 
-            UserInterface ui = new UserInterface(connectionString, venueDAO, spaceDAO);
+            UserInterface ui = new UserInterface(connectionString, venueDAO, spaceDAO, reserveDAO);
             ui.Run();
 
         }
