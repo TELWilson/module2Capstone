@@ -68,40 +68,40 @@ namespace Capstone.DAL
             switch (numMonth)
             {
                 case "1":
-                    numMonth = "Jan";
+                    numMonth = "Jan.";
                     break;
                 case "2":
-                    numMonth = "Feb";
+                    numMonth = "Feb.";
                     break;
                 case "3":
-                    numMonth = "Mar";
+                    numMonth = "Mar.";
                     break;
                 case "4":
-                    numMonth = "Apr";
+                    numMonth = "Apr.";
                     break;
                 case "5":
-                    numMonth = "May";
+                    numMonth = "May.";
                     break;
                 case "6":
-                    numMonth = "Jun";
+                    numMonth = "Jun.";
                     break;
                 case "7":
-                    numMonth = "Jul";
+                    numMonth = "Jul.";
                     break;
                 case "8":
-                    numMonth = "Aug";
+                    numMonth = "Aug.";
                     break;
                 case "9":
-                    numMonth = "Sep";
+                    numMonth = "Sep.";
                     break;
                 case "10":
-                    numMonth = "Oct";
+                    numMonth = "Oct.";
                     break;
                 case "11":
-                    numMonth = "Nov";
+                    numMonth = "Nov.";
                     break;
                 case "12":
-                    numMonth = "Dec";
+                    numMonth = "Dec.";
                     break;
                 default:
                     break;
