@@ -97,20 +97,60 @@ namespace Capstone
             {
                 // Print out Venues and Quit Option
                 DisplayListVenuesMenu();
-                // Take in the User's Input
-                string ListVenuesMenuUserInput = Console.ReadLine();
 
-                // If the user types in "r" or "R"
-                if (ListVenuesMenuUserInput.ToLower().Equals("r"))
+                IList<Venue> listOfVenues = venueDAO.GetVenues();
+                // Method that gets and checks the User Input
+                //int userInputVenueID = CheckVenueIDAndDisplayVenue(listOfVenues);
+
+                VenueDetails = new Venue();
+                string userInput = "";
+                int convertedUserInput = -1; // Stores the user input string converted into an int.
+                bool validOrNot; // Stores the bool of whether or not the User Input could be parsed to an int.
+
+                List<int> venueIds = new List<int>();
+
+                foreach (Venue venue in listOfVenues)
                 {
-                    stayInListVenuesMenu = false;
+                    venueIds.Add(venue.id);
+                }
+
+                do
+                {
+                    userInput = Console.ReadLine();
+
+                    // If the user types in "r" or "R"
+                    if (userInput.ToLower().Equals("r"))
+                    {
+                        validOrNot = true;
+                        break;
+                    }
+
+                    validOrNot = int.TryParse(userInput, out convertedUserInput);
+
+                    // If the TryParse fails...
+                    if (validOrNot == false)
+                    {
+                        Console.WriteLine("1)Please enter a valid venue id.");
+                    }
+                    // If the TryParse doesn't fail but isn't one of the available space ids...
+                    else if (!venueIds.Contains(convertedUserInput))
+                    {
+                        Console.WriteLine("2)Please enter a valid venue id.");
+                        validOrNot = false;
+                    }
+                }
+                while (!validOrNot);
+
+                if (userInput.ToLower().Equals("r"))
+                {
                     break;
+                    stayInListVenuesMenu = false;
                 }
                 else
                 {
                     // Create a new Venue with the information it needs to display to the User
                     // Needs a check to see if the selected venue is a valid option
-                    VenueDetails = venueDAO.ListVenue(int.Parse(ListVenuesMenuUserInput));
+                    VenueDetails = venueDAO.ListVenue(convertedUserInput);
 
                     Console.WriteLine();
                     Console.WriteLine(VenueDetails.name);
@@ -121,11 +161,11 @@ namespace Capstone
                     Console.WriteLine();
 
                     // Move to the Venue Details Menu
-                    RunVenueDetailsMenu(ListVenuesMenuUserInput, VenueDetails);
+                    RunVenueDetailsMenu(convertedUserInput.ToString(), VenueDetails);
                 }
-
             }
         }
+
 
         /// <summary>
         /// This method Displays the second menu screen to the user.
@@ -203,7 +243,7 @@ namespace Capstone
                         RunViewSpacesMenu(venueNumber);
                         break;
                     case "2":
-                        Console.WriteLine("Not Implemented yet!");
+                        RunReserveASpaceMenu(venueNumber);
                         break;
                     case "r":
                         stayInVenueDetailsMenu = false;
@@ -297,6 +337,11 @@ namespace Capstone
             // Make sure it is in the correct format 01-29-2020
             string userStartDate = Console.ReadLine();
             DateTime dTUserStartDate = DateTime.Parse(userStartDate);
+            if (dTUserStartDate < DateTime.Now)
+            {
+                Console.WriteLine("Please pick a future date.");
+                return;
+            }
 
             Console.Write("How many days will you need the space?: ");
             string userDaysWanted = Console.ReadLine();
@@ -320,31 +365,10 @@ namespace Capstone
             //TODO need to return to previous menu if they select 0
 
             int intUserSpaceID = GetAndCheckSpaceToReserve(availableSpaces);
-            //Console.Write("Which space would you like to reserve (Enter 0 to cancel)?: ");
-            //string userSpaceID = Console.ReadLine();
-            //int intUserSpaceID = int.Parse(userSpaceID);
-            // Method that makes sure the intUserSpaceID is a space id inside the currently selected Venue!
-            
-            //bool validityCheck = false;
-
-            //for (int i = 0; i < availableSpaces.Count; i++)
-            //{
-
-            //    if (intUserSpaceID == availableSpaces[i].space_id)
-            //    {
-            //        validityCheck = true;
-            //        break;
-            //    }
-                    
-            //}
-            //if (validityCheck == true)
-            //{
-            //    // Continue on with the program
-            //}
-            //else
-            //{
-            //    // Please enter a valid space_id
-            //}
+            if (intUserSpaceID == 0)
+            {
+                return;
+            }
 
             Console.Write("Who is this reservation for?: ");
             string userName = Console.ReadLine();
@@ -389,6 +413,7 @@ namespace Capstone
                 
                 if (userInput == "0")
                 {
+                    convertedUserInput = 0;
                     validOrNot = true;
                     break;
                 }
