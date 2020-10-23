@@ -196,7 +196,7 @@ namespace Capstone
                         Console.WriteLine();
                         Console.WriteLine(venueDetails.name + " Spaces");
                         Console.WriteLine();
-                        Console.WriteLine("".PadRight(5) + "Name".PadRight(30) + "Open".PadRight(10) + "Close".PadRight(10) + "Daily Rate".PadRight(20) + "Max. Occupancy".PadRight(20));
+                        Console.WriteLine("".PadRight(5) + "Name".PadRight(40) + "Open".PadRight(10) + "Close".PadRight(10) + "Daily Rate".PadRight(20) + "Max. Occupancy".PadRight(20));
                         GetAllSpaces(venueNumber);
                         Console.WriteLine();
 
@@ -237,7 +237,7 @@ namespace Capstone
             {
                 foreach (Space space in spaces)
                 {
-                    Console.WriteLine("#" + space.id.ToString().PadRight(4) + space.name.PadRight(30) + space.open_from_string.ToString().PadRight(10) + space.open_to_string.ToString().PadRight(10) + space.daily_rate.ToString("C").PadRight(20) + space.max_occupancy.ToString().PadRight(20));
+                    Console.WriteLine("#" + space.id.ToString().PadRight(4) + space.name.PadRight(40) + space.open_from_string.ToString().PadRight(10) + space.open_to_string.ToString().PadRight(10) + space.daily_rate.ToString("C").PadRight(20) + space.max_occupancy.ToString().PadRight(20));
                 }
             }
             else
@@ -307,23 +307,110 @@ namespace Capstone
             int intUserAttendees = int.Parse(userAttendees);
 
             Console.WriteLine("The following spaces are available based on your needs: ");
+
             // SQL statement that displays space#, name, daily rate, max occupancy, accessible, total cost
             IList<Reservation> availableSpaces = reserveDAO.CheckAvailability(venueNumber, intUserAttendees, dTUserStartDate, intUserDaysWanted);
+
             //Make this a method
-            Console.WriteLine("Space #".PadRight(10) + "Name".PadRight(30) + "Daily Rate".PadRight(10) + "Max. Occup.".PadRight(10) + "Accessibile?".PadRight(20) + "Total Cost".PadRight(20));
+            Console.WriteLine("Space #".PadRight(10) + "Name".PadRight(40) + "Daily Rate".PadRight(20) + "Max. Occup.".PadRight(20) + "Accessibile?".PadRight(25) + "Total Cost".PadRight(20));
             foreach (Reservation reservation in availableSpaces)
             {
-                Console.WriteLine("#" + reservation.reservation_id.ToString().PadRight(9) + reservation.name.PadRight(30) + reservation.daily_rate.ToString("C").PadRight(10) + reservation.max_occup.ToString().PadRight(10) + reservation.is_accessible.ToString().PadRight(20) + reservation.total_cost.ToString("C").PadRight(20));
+                Console.WriteLine("#" + reservation.space_id.ToString().PadRight(9) + reservation./*Check*/space_name.PadRight(40) + reservation.daily_rate.ToString("C").PadRight(20) + reservation.max_occup.ToString().PadRight(20) + reservation.is_accessible.ToString().PadRight(25) + reservation.total_cost.ToString("C").PadRight(20));
             }
+            //TODO need to return to previous menu if they select 0
 
-            Console.Write("Which space would you like to reserve (Enter 0 to cancel)?: ");
-            string userReservationChoice = Console.ReadLine();
+            int intUserSpaceID = GetAndCheckSpaceToReserve(availableSpaces);
+            //Console.Write("Which space would you like to reserve (Enter 0 to cancel)?: ");
+            //string userSpaceID = Console.ReadLine();
+            //int intUserSpaceID = int.Parse(userSpaceID);
+            // Method that makes sure the intUserSpaceID is a space id inside the currently selected Venue!
+            
+            //bool validityCheck = false;
+
+            //for (int i = 0; i < availableSpaces.Count; i++)
+            //{
+
+            //    if (intUserSpaceID == availableSpaces[i].space_id)
+            //    {
+            //        validityCheck = true;
+            //        break;
+            //    }
+                    
+            //}
+            //if (validityCheck == true)
+            //{
+            //    // Continue on with the program
+            //}
+            //else
+            //{
+            //    // Please enter a valid space_id
+            //}
 
             Console.Write("Who is this reservation for?: ");
             string userName = Console.ReadLine();
 
             Console.WriteLine("Thanks for submitting your reservation! The details for your event are listed below: ");
             // SQL statement to insert the reservation
+            //TODO: Make sure that intUserAttendees is a valid choice that the User can select!
+            reserveDAO.MakeReservation(venueNumber, intUserAttendees, dTUserStartDate, intUserDaysWanted, intUserSpaceID, userName);
+
+            Reservation lastReservation = reserveDAO.GetLastReservationDetails(intUserDaysWanted);
+
+            //TODO: Make this a method:
+            Console.WriteLine("Confirmation #: ".PadLeft(20) + lastReservation.reservation_id.ToString().PadRight(20));
+            Console.WriteLine("Venue: ".PadLeft(20) + lastReservation.venue_name.ToString().PadRight(20));
+            Console.WriteLine("Space: ".PadLeft(20) + lastReservation.space_name.ToString().PadRight(20));
+            Console.WriteLine("Reserved For: ".PadLeft(20) + lastReservation.reserved_for.ToString().PadRight(20));
+            Console.WriteLine("Attendees: ".PadLeft(20) + lastReservation.number_of_attendees.ToString().PadRight(20));
+            Console.WriteLine("Arrival Date: ".PadLeft(20) + lastReservation.start_date.ToString("mm/dd/yyyy").PadRight(20));
+            Console.WriteLine("Depart Date: ".PadLeft(20) + lastReservation.end_date.ToString("mm/dd/yyyy").PadRight(20));
+            Console.WriteLine("Total Cost: ".PadLeft(20) + lastReservation.total_cost.ToString("C").PadRight(20));
+
+            Console.WriteLine();
+        }
+
+        private int GetAndCheckSpaceToReserve(IList<Reservation> availableSpaces)
+        {
+            string userInput = ""; // Stores the User's input
+            int convertedUserInput = -1; // Stores the user input string converted into an int.
+            bool validOrNot; // Stores the bool of whether or not the User Input could be parsed to an int.
+
+            List<int> spaceIds = new List<int>();
+
+            foreach (Reservation availableSpace in availableSpaces)
+            {
+                spaceIds.Add(availableSpace.space_id);
+            }
+
+            do
+            {
+                Console.Write("Which space would you like to reserve(Enter 0 to cancel) ?: ");
+                userInput = Console.ReadLine();
+                
+                if (userInput == "0")
+                {
+                    validOrNot = true;
+                    break;
+                }
+
+                validOrNot = int.TryParse(userInput, out convertedUserInput);
+
+                // If the TryParse fails...
+                if (validOrNot == false)
+                {
+                    Console.WriteLine("1)Please enter a valid space id.");
+                }
+                // If the TryParse doesn't fail but isn't one of the available space ids...
+                else if (!spaceIds.Contains(convertedUserInput))
+                {
+                    Console.WriteLine("2)Please enter a valid space id.");
+                    validOrNot = false;
+                }
+            }
+            while (!validOrNot);
+
+            return convertedUserInput;
+            
         }
     }
 }

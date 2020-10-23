@@ -8,17 +8,20 @@ namespace Capstone.Models
     {
         public int reservation_id { get; set; }
 
-        public string name { get; set; }
+        public string venue_name { get; set; }
 
         public int space_id { get; set; }
+
+        public string space_name { get; set; }
 
         public int number_of_attendees { get; set; }
 
         public int max_occup { get; set; }
 
-        public string start_date { get; set; }
+        //Changed to String. Effects ReservationDAO Lines 78/79/116/117/176/177
+        public DateTime start_date { get; set; }
 
-        public string end_date { get; set; }
+        public DateTime end_date { get; set; }
 
         public string reserved_for { get; set; }
 
