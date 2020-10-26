@@ -51,8 +51,7 @@ namespace Capstone
             while (stayInMainMenu)
             {
                 DisplayMainMenu();
-                //TODO: Check and make sure the user enters a valid input.
-                
+                               
                 string mainMenuUserInput = Console.ReadLine().ToLower();
 
                 switch (mainMenuUserInput)
