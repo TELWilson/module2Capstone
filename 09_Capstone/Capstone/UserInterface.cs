@@ -361,7 +361,7 @@ namespace Capstone
             {
                 Console.WriteLine("#" + reservation.space_id.ToString().PadRight(9) + reservation./*Check*/space_name.PadRight(40) + reservation.daily_rate.ToString("C").PadRight(20) + reservation.max_occup.ToString().PadRight(20) + reservation.is_accessible.ToString().PadRight(25) + reservation.total_cost.ToString("C").PadRight(20));
             }
-            //TODO need to return to previous menu if they select 0
+            
 
             int intUserSpaceID = GetAndCheckSpaceToReserve(availableSpaces);
             if (intUserSpaceID == 0)
